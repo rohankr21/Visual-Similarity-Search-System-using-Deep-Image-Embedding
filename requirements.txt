@@ -1,0 +1,11 @@
+torch 
+torchvision
+faiss-cpu
+numpy 
+pandas
+matplotlib
+scikit-learn
+gradio
+tqdm
+Pillow
+jupyter

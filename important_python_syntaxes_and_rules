@@ -1,0 +1,94 @@
+As a Docstring: When placed at the very beginning of a function, class, or module, it serves as an empty documentation string (docstring). This tells the Python interpreter and tools like help() that the object exists but currently has no descriptive documentation.
+
+|||||---------------------------------|||||
+|||||---------------------------------|||||
+
+MLP in "MLP Classifier" stands for Multi-Layer Perceptron.
+Multi-Layer: Refers to the architecture, which consists of an input layer, one or more hidden layers, and an output layer.
+Perceptron: Refers to the individual neuron or node within the network that processes data using weights, a bias, and a non-linear activation function. 
+
+MLP Classifier specifically refers to a Multi-Layer Perceptron Classifier, a type of feedforward artificial neural network used in machine learning for supervised classification tasks.
+
+|||||---------------------------------|||||
+|||||---------------------------------|||||
+
+super().__init__() calls the constructor (__init__ method) of the parent class, allowing a child class to inherit and initialize attributes from its parent. It ensures parent class setup runs, reducing code redundancy while enabling the child class to extend or add new functionality to its own initialization.
+
+nn.Sequential: This acts as a container. Data will flow through the layers defined inside it in the exact order they are listed.
+
+Inside the Sequential container (Layer 1):
+
+	nn.Linear(input_dim, 512)
+	This is a fully connected (dense) layer. It takes your input data (with a size of input_dim) and applies a linear transformation to output 512 features.
+
+	nn.BatchNorm1d(512)
+	Batch Normalization standardizes the outputs from the previous linear layer so they have a mean of 0 and a variance of 1. This helps the network train faster and remain stable. The 512 must match the output size of the previous layer.
+
+	nn.ReLU()
+	This is the activation function (Rectified Linear Unit). It introduces non-linearity into the network by taking any negative values and turning them into 0, while leaving positive values unchanged. This allows the network to learn complex patterns.
+
+	nn.Dropout(dropout)
+	This layer randomly "turns off" a percentage of the neurons (based on your dropout variable, defaulting to 40%) during each training pass. This forces the network to not rely too heavily on any single neuron, which heavily reduces overfitting and makes the model more robust.
+
+|||||---------------------------------|||||
+|||||---------------------------------|||||
+Training Hyperparameters
+1. lr (Learning Rate = 0.001)
+The learning rate dictates how big of a step the model takes when adjusting its internal weights to correct its mistakes.
+
+Imagine you are blindfolded and trying to walk down to the lowest point of a valley (where the lowest point represents zero errors for your model):
+
+If the lr is too high (taking giant leaps): You might completely step over the bottom of the valley and bounce back and forth on the hillsides. The model will fail to learn properly and become unstable.
+
+If the lr is too low (taking baby steps): You will eventually reach the bottom, but it will take an incredibly long time. The model will train very slowly and might get stuck in a shallow, local dip instead of the true bottom of the valley.
+
+1e-3 (or 0.001) is a widely accepted "Goldilocks" default value—not too big, not too small—that works well for many standard optimizers like Adam.
+
+2. weight_decay (L2 Regularization = 0.0001)
+Weight decay is a technique used to prevent overfitting. Overfitting happens when a model memorizes the training data perfectly but performs terribly on new, unseen data.
+
+Weight decay stops this by slightly penalizing the model for having large internal weights:
+
+How it works: During every training step, it slightly "decays" or shrinks the model's weights toward zero.
+
+The result: It forces the model to distribute its learning across many different features rather than relying too heavily on just one or two specific features. This results in a "simpler," smoother model that generalizes better to real-world data.
+
+1e-4 (or 0.0001) provides a very gentle downward pull on the weights, which is enough to keep them in check without destroying the model's ability to learn complex patterns.
+
+The Leading Underscore (_) in a function name inside a class
+In Python, naming a method with a single leading underscore (like _run_epoch) is a strong convention that means "this is for internal use only." It acts as a warning sign to other programmers using your code:
+
+You shouldn't call trainer._run_epoch() directly from outside the class.
+
+Instead, you would call a public method like trainer.train(), and that public method will handle calling _run_epoch behind the scenes.
+
+While __init__() is a special method that runs exactly once when you first create an object, _run_epoch is a standard instance method that will likely be called many times throughout the lifecycle of the object.
+
+Gemini said
+In Python, the with statement is used to wrap a block of code inside a Context Manager.
+
+A context manager is simply a tool that automatically handles setup and teardown (or cleanup) tasks for you behind the scenes. It guarantees that specific actions happen before your code runs, and specific cleanup actions happen after your code finishes—even if an error occurs in the middle.
+
+The Classic Example: File Handling
+The best way to understand the with statement is to look at how we open files.
+
+Without with (The hard way):
+
+Python
+file = open("data.txt", "r") # Setup: Open the file
+data = file.read()
+file.close()                 # Teardown: You MUST remember to close it manually
+If an error happens while reading the file, file.close() is never reached, leaving the file locked open.
+
+Using with (The smart way):
+
+Python
+with open("data.txt", "r") as file:
+    data = file.read()
+# Teardown happens automatically the moment you stop indenting!
+Here, the with statement guarantees the file will be closed automatically when the block is done, no matter what happens.
+
+tqdm library use 
+Normally, when you run a loop over a massive dataset (like a PyTorch dataloader), your terminal just sits there blinking blankly until the loop finishes. You have no idea if it will take 5 seconds or 5 hours.
+
+By wrapping your dataloader in tqdm(...), it automatically prints a dynamic, updating progress bar to your terminal that looks something like this:
